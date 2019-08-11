@@ -10,7 +10,7 @@
     </div>
     <div class="cartoon-item-container">
       <div class="cartoon-item-wrapper" v-for="item in dailyList" :key="item.id">
-        <NuxtLink :to="String(item.id)" class="cartoon-link">
+        <NuxtLink :to="'/episodes/' + String(item.id)" class="cartoon-link">
           <div class="cartoon-item">
             <div class="thumb-wrapper">
               <img class="thumb" :src="item.thumbSrc" :alt="item.title" />
