@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "delightful-naver-webtoon",
   "version": "1.0.0",
-  "description": "",
+  "description": "I love Naver webtoon",
   "author": "Jang Haemin",
   "private": true,
   "scripts": {
