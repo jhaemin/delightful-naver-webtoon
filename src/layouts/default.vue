@@ -1,10 +1,12 @@
 <template>
   <div>
-    <nuxt class="master-content" />
+    <Nuxt class="master-content" />
   </div>
 </template>
 
 <style lang="scss">
+@import '@/assets/scss/main';
+
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -27,7 +29,7 @@ html {
 body {
   word-wrap: break-word;
   word-break: keep-all;
-  color: #222;
+  color: $base-black;
 }
 
 *,

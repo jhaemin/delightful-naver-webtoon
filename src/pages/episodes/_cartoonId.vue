@@ -4,9 +4,9 @@
     <h2 class="cartoon-authors"></h2>
 
     <div class="episodes-container">
-      <nuxt-link class="expisode-link" v-for="item in episodes.list" :key="item.title" to="/">
+      <NuxtLink class="expisode-link" v-for="item in episodes.list" :key="item.title" to="/">
         <div class="episode-item">{{ item.title }}</div>
-      </nuxt-link>
+      </NuxtLink>
     </div>
   </div>
 </template>

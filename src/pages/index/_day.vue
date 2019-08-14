@@ -1,5 +1,9 @@
 <template>
   <div class="daily-list">
+    <div class="today-info">
+      <h2 class="today-date">{{ todayStr }}</h2>
+      <h1 class="weekday">{{ dayToKr(this.today) }}요일</h1>
+    </div>
     <div class="day-select">
       <a class="day-link" v-for="i in 7" :key="i" :href="`/${dayToString(i - 1)}`">
         <button
@@ -29,10 +33,13 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import dayToString from '~/plugins/day-to-string.js'
+import dayToString from '~/plugins/day-to-string.ts'
+import dayToKr from '~/plugins/day-to-kr.ts'
 
 export default {
   middleware({ redirect, route }) {
+    // If there is no param for day
+    // redirect to today
     if (!route.params.day) {
       return redirect(`/${dayToString(dayjs().day())}`)
     }
@@ -57,32 +64,67 @@ export default {
   methods: {
     dayToString(dayIndex, lang) {
       return dayToString(dayIndex, lang)
+    },
+    dayToKr(dayStr) {
+      return dayToKr(dayStr)
+    }
+  },
+  computed: {
+    todayStr() {
+      let todayObj = dayjs()
+      return `${todayObj.year()}년 ${todayObj.month() +
+        1}월 ${todayObj.date()}일`
     }
   }
 }
 </script>
 
 <style lang="scss">
-$cartoon-gap: 0.5rem;
+@import '@/assets/scss/main';
+
+$cartoon-gap: 1rem;
 
 .daily-list {
-  padding: 0 1rem - $cartoon-gap;
   max-width: 60rem;
   margin: auto;
 
+  .today-info {
+    padding: 2rem 1rem 0.7rem;
+    margin-bottom: 0.5rem;
+    position: sticky;
+    top: -1.3rem;
+    z-index: 8888;
+    background-color: rgba(#fff, 0.85);
+    backdrop-filter: blur(20px) saturate(1.5);
+
+    .today-date {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: #808080;
+      margin-bottom: 0.3rem;
+    }
+
+    .weekday {
+      font-size: 1.5rem;
+      line-height: 1em;
+      height: 1em;
+    }
+  }
+
   .day-select {
+    position: fixed;
+    left: 50%;
+    bottom: 2.5rem;
+    transform: translateX(-50%);
     display: flex;
     overflow: hidden;
+    width: calc(100% - 2rem);
     max-width: 25rem;
-    margin: auto;
-    position: sticky;
-    top: 1rem;
     background-color: #fff;
     z-index: 9999;
-    padding: 0 0.7rem;
+    padding: 0 space(3);
     height: 2.3rem;
-    border-radius: 0 0 0.7rem 0.7rem;
-    border-radius: 0.7rem;
+    border-radius: radius(4);
     box-shadow: 0 1.5rem 5rem rgba(#000, 0.4);
 
     .day-link {
@@ -100,7 +142,7 @@ $cartoon-gap: 0.5rem;
         background: none;
 
         &.selected {
-          background-color: #f5f6fa;
+          background-color: $alice-blue;
           font-weight: 600;
           color: #424242;
         }
@@ -109,37 +151,73 @@ $cartoon-gap: 0.5rem;
   }
 
   .cartoon-item-container {
-    padding-top: 3rem;
+    margin: auto;
+    padding-bottom: 6rem;
+    width: calc(100% - 2rem);
+
+    @media only screen and (max-width: 500px) {
+      width: calc(100% - 1rem);
+    }
 
     .cartoon-item-wrapper {
-      padding-bottom: 1rem;
+      padding-bottom: $cartoon-gap;
       display: inline-block;
-      width: calc(#{100% * 1 / 6} - #{$cartoon-gap * 2});
+      width: calc(#{100% * 1 / 6} - #{$cartoon-gap});
       vertical-align: top;
-      margin: 0 $cartoon-gap;
+      margin-right: $cartoon-gap;
 
-      @media only screen and (max-width: 1000px) {
-        width: calc(#{100% * 1 / 5} - #{$cartoon-gap * 2});
+      @media only screen and (min-width: 1001px) {
+        $num: 6;
+        width: calc((100% - #{$cartoon-gap * ($num - 1)}) / #{$num});
+
+        &:nth-child(#{$num}n) {
+          margin-right: 0;
+        }
       }
 
-      @media only screen and (max-width: 770px) {
-        width: calc(#{100% * 1 / 4} - #{$cartoon-gap * 2});
+      @media only screen and (min-width: 771px) and (max-width: 1000px) {
+        $num: 5;
+        width: calc((100% - #{$cartoon-gap * ($num - 1)}) / #{$num});
+
+        &:nth-child(#{$num}n) {
+          margin-right: 0;
+        }
       }
 
-      @media only screen and (max-width: 650px) {
-        width: calc(#{100% * 1 / 3} - #{$cartoon-gap * 2});
+      @media only screen and (min-width: 651px) and (max-width: 770px) {
+        $num: 4;
+        width: calc((100% - #{$cartoon-gap * ($num - 1)}) / #{$num});
+
+        &:nth-child(#{$num}n) {
+          margin-right: 0;
+        }
+      }
+
+      @media only screen and (min-width: 501px) and (max-width: 650px) {
+        $num: 3;
+        width: calc((100% - #{$cartoon-gap * ($num - 1)}) / #{$num});
+
+        &:nth-child(#{$num}n) {
+          margin-right: 0;
+        }
       }
 
       @media only screen and (max-width: 500px) {
-        $cartoon-gap: 0.2rem;
-        width: calc(#{100% * 1 / 3} - #{$cartoon-gap * 2});
-        margin: 0 $cartoon-gap;
+        $num: 3;
+        $cartoon-gap: 0.4rem;
+        padding-bottom: $cartoon-gap;
+        margin-right: $cartoon-gap;
+        width: calc((100% - #{$cartoon-gap * ($num - 1)}) / #{$num});
+
+        &:nth-child(#{$num}n) {
+          margin-right: 0;
+        }
       }
 
       .cartoon-link {
         .cartoon-item {
-          background-color: #f5f6fa;
-          border-radius: 0.7rem;
+          background-color: $alice-blue;
+          border-radius: $radius-4;
           padding: 0.5rem;
           padding-bottom: 0.7rem;
           overflow: hidden;
