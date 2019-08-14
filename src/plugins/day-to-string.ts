@@ -1,4 +1,4 @@
-module.exports = function(dayIndex, lang) {
+module.exports = function(dayIndex: number, lang: string) {
   if (dayIndex < 0 || dayIndex > 6) {
     console.error('Wrong day index')
     return ''
