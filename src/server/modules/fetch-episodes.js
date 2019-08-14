@@ -1,3 +1,7 @@
+/**
+ * 성인 웹툰의 경우 로그인 창이 떠서 에러
+ */
+
 module.exports = function(cartoonId, pageNumber) {
   return new Promise((resolve, reject) => {
     const request = require('request')
@@ -5,7 +9,14 @@ module.exports = function(cartoonId, pageNumber) {
     const { JSDOM } = jsdom
     const queryString = require('query-string')
 
-    let episodes = []
+    let episodes = {
+      info: {
+        title: '',
+        author: [],
+        score: 0
+      },
+      list: []
+    }
 
     let url =
       'https://m.comic.naver.com/webtoon/list.nhn' + '?titleId=' + cartoonId
@@ -17,8 +28,9 @@ module.exports = function(cartoonId, pageNumber) {
     request(url, (err, res, body) => {
       const dom = new JSDOM(body)
 
+      let episodeList
       try {
-        let episodeList = dom.window.document.querySelectorAll(
+        episodeList = dom.window.document.querySelectorAll(
           '.section_episode_list'
         )
         episodeList = episodeList[episodeList.length - 1]
@@ -30,8 +42,20 @@ module.exports = function(cartoonId, pageNumber) {
         console.error(error)
       }
 
+      // Get title
+      let areaInfo = dom.window.document.querySelector('.area_info')
+      episodes.info.title = areaInfo.querySelector('.title').textContent
+      episodes.info.author.push(
+        areaInfo.querySelector('.author').firstChild.textContent
+      )
+      if (areaInfo.querySelector('.author .multi_author')) {
+        episodes.info.author.push(
+          areaInfo.querySelector('.author .multi_author').textContent
+        )
+      }
+
       let items = episodeList.querySelectorAll('li')
-      console.log(items.length)
+
       for (let i = 0; i < items.length; i++) {
         let item = items[i]
         let epi = {
@@ -74,7 +98,7 @@ module.exports = function(cartoonId, pageNumber) {
 
         epi.id = epiId
 
-        episodes.push(epi)
+        episodes.list.push(epi)
       }
 
       resolve(episodes)

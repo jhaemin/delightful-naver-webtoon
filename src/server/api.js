@@ -1,18 +1,19 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/api/daily-list', (req, response) => {
+router.get('/api/daily-list', async (req, response) => {
   const fetchDailyList = require('./modules/fetch-daily-list.js')
-  fetchDailyList(req.query.day).then(cartoons => {
-    response.json(cartoons)
-  })
+
+  let cartoons = await fetchDailyList(req.query.day)
+  response.json(cartoons)
 })
 
-router.get('/api/episodes', (req, response) => {
+// Fetch episodes
+router.get('/api/episodes', async (req, response) => {
   const fetchEpisodes = require('./modules/fetch-episodes.js')
-  fetchEpisodes(req.query.cartoonId).then(episodes => {
-    response.json(episodes)
-  })
+
+  let episodes = await fetchEpisodes(req.query.cartoonId)
+  response.json(episodes)
 })
 
 module.exports = router
