@@ -32,3 +32,41 @@
 
   @return calculate($min, $max, $level);
 }
+
+@function body($level) {
+  $level: validate($level);
+  $min: 0.6rem;
+  $max: 1rem;
+
+  @return calculate($min, $max, $level);
+}
+
+@function head($level) {
+  $level: validate($level);
+  $min: 1.2rem;
+  $max: 2.5rem;
+
+  @return calculate($min, $max, $level);
+}
+
+@function weight($level) {
+  $level: validate($level);
+  @if $level == 1 {
+    @return 200;
+  }
+  @if $level == 2 {
+    @return 300;
+  }
+  @if $level == 3 {
+    @return 400;
+  }
+  @if $level == 4 {
+    @return 500;
+  }
+  @if $level == 5 {
+    @return 500;
+  }
+  @if $level == 6 {
+    @return 700;
+  }
+}
