@@ -46,4 +46,15 @@ a {
   color: inherit;
   -webkit-touch-callout: none !important;
 }
+
+.flex-spacer {
+  flex: 1;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  height: 0 !important;
+  border: none !important;
+  background: none !important;
+}
 </style>
