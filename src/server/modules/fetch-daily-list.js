@@ -1,28 +1,41 @@
-module.exports = function(selectedDay) {
+const request = require('request')
+const jsdom = require('jsdom')
+const { JSDOM } = jsdom
+const queryString = require('query-string')
+
+module.exports = function (selectedDay) {
   return new Promise((resolve, reject) => {
-    const request = require('request')
-    const jsdom = require('jsdom')
-    const { JSDOM } = jsdom
-    const queryString = require('query-string')
-    let cartoons = []
-    let url =
+    function rejectPromise () {
+      reject(new Error('Wrong dom structure. Website may be got updated.'))
+    }
+
+    const cartoons = []
+    const url =
       'https://m.comic.naver.com/webtoon/weekday.nhn' + '?week=' + selectedDay
 
     request(url, (err, res, body) => {
-      const dom = new JSDOM(body)
-      let toonList = dom.window.document.querySelector('.list_toon')
-
-      if (!toonList) {
-        console.error('Wrong dom structure. Website may be got updated.')
-
-        resolve(cartoons)
+      if (err) {
+        reject(err)
       }
 
-      let toonItems = toonList.querySelectorAll('.item:not(.banner)')
+      const dom = new JSDOM(body)
+      const toonList = dom.window.document.querySelector('.list_toon')
+
+      if (!toonList) {
+        rejectPromise()
+        return
+      }
+
+      const toonItems = toonList.querySelectorAll('.item:not(.banner)')
+      if (!toonItems) {
+        rejectPromise()
+        return
+      }
+
       for (let i = 0; i < toonItems.length; i++) {
-        let item = toonItems[i]
+        const item = toonItems[i]
         // Create a webtoon object
-        let cartoon = {
+        const cartoon = {
           id: 0,
           title: '',
           authors: [],
@@ -38,30 +51,34 @@ module.exports = function(selectedDay) {
         }
 
         // get title
+        if (!item.querySelector('.title')) {
+          rejectPromise()
+          return
+        }
         cartoon.title = item.querySelector('.title').textContent
 
-        let authorDom
-        try {
-          // push author name to array
-          authorDom = item.querySelector('.author') // author element
-          cartoon.authors.push(authorDom.firstChild.textContent)
-        } catch (error) {
-          console.error(error)
+        // push author name to array
+        const authorDom = item.querySelector('.author') // author element
+        if (!authorDom) {
+          rejectPromise()
+          return
         }
+        cartoon.authors.push(authorDom.firstChild.textContent)
 
-        try {
-          // if there exists multi author
-          if (authorDom.querySelector('.multi_author')) {
-            cartoon.authors.push(
-              authorDom.querySelector('.multi_author').textContent
-            )
-          }
-        } catch (error) {
-          console.error(error)
+        // if there exists multi author
+        if (authorDom.querySelector('.multi_author')) {
+          cartoon.authors.push(
+            authorDom.querySelector('.multi_author').textContent
+          )
         }
 
         // check details
-        let detailsDom = item.querySelector('.detail')
+        const detailsDom = item.querySelector('.detail')
+        if (!detailsDom) {
+          rejectPromise()
+          return
+        }
+
         if (detailsDom.querySelector('.bullet.up')) {
           cartoon.details.update = true
         }
@@ -79,14 +96,22 @@ module.exports = function(selectedDay) {
         }
 
         // get link
+        if (!item.querySelector('a')) {
+          rejectPromise()
+          return
+        }
         cartoon.link = item.querySelector('a').href
 
         // get thumbnail image source
+        if (!item.querySelector('img')) {
+          rejectPromise()
+          return
+        }
         cartoon.thumbSrc = item.querySelector('img').src
 
         // get webtoon id
-        let parsedData = queryString.parse(cartoon.link.split('?')[1])
-        cartoon.id = Number(parsedData['titleId'])
+        const parsedData = queryString.parse(cartoon.link.split('?')[1])
+        cartoon.id = Number(parsedData.titleId)
 
         cartoons.push(cartoon)
       }

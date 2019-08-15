@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <NuxtChild></NuxtChild>
+    <NuxtChild />
   </div>
 </template>
 

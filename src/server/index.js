@@ -3,10 +3,6 @@ const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
 
-// api router
-const api = require('./api.js')
-app.use(api)
-
 // Import and Set Nuxt.js options
 const nuxtConfig = require('../../nuxt.config.js')
 nuxtConfig.dev = process.env.NODE_ENV !== 'production'
@@ -15,6 +11,10 @@ nuxtConfig.dev = process.env.NODE_ENV !== 'production'
 const nuxt = new Nuxt(nuxtConfig)
 
 const { host, port } = nuxt.options.server
+
+// api router
+const api = require('./api.js')
+app.use(api)
 
 // Build only in dev mode
 if (nuxtConfig.dev) {
