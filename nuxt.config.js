@@ -29,11 +29,7 @@ module.exports = {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
-  /*
-   ** Global CSS
-   */
-  css: [],
+  loading: false,
   /*
    ** Plugins to load before mounting the App
    */
@@ -41,7 +37,9 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
-  devModules: [],
+  devModules: [
+    '@nuxtjs/eslint-module'
+  ],
   /*
    ** Nuxt.js modules
    */
@@ -51,9 +49,14 @@ module.exports = {
    */
   build: {
     publicPath: '/dist/',
+    postcss: {
+      plugins: {
+        autoprefixer: {}
+      }
+    },
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend (config, ctx) {}
   }
 }
