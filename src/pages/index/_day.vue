@@ -1,11 +1,15 @@
 <template>
   <div class="daily-list">
     <div class="today-info">
-      <h2 class="today-date">{{ todayStr }}</h2>
-      <h1 class="weekday">{{ dayToKr(this.today) }}요일</h1>
+      <h2 class="today-date">
+        {{ todayStr }}
+      </h2>
+      <h1 class="weekday">
+        {{ dayToKr(today) }}요일
+      </h1>
     </div>
     <div class="day-select">
-      <a class="day-link" v-for="i in 7" :key="i" :href="`/${dayToString(i - 1)}`">
+      <a v-for="i in 7" :key="i" class="day-link" :href="`/${dayToString(i - 1)}`">
         <button
           class="day-btn"
           :class="{ selected: dayToString(i - 1) === today }"
@@ -13,15 +17,19 @@
       </a>
     </div>
     <div class="cartoon-item-container">
-      <div class="cartoon-item-wrapper" v-for="item in dailyList" :key="item.id">
-        <NuxtLink :to="'/episodes/' + String(item.id)" class="cartoon-link">
+      <div v-for="item in dailyList" :key="item.id" class="cartoon-item-wrapper">
+        <NuxtLink :to="'/cartoon/' + String(item.id)" class="cartoon-link">
           <div class="cartoon-item">
             <div class="thumb-wrapper">
-              <img class="thumb" :src="item.thumbSrc" :alt="item.title" />
+              <img class="thumb" :src="item.thumbSrc" :alt="item.title">
             </div>
             <div class="info">
-              <h1 class="title">{{ item.title }}</h1>
-              <h2 class="authors">{{ item.authors.join(' · ') }}</h2>
+              <h1 class="title">
+                {{ item.title }}
+              </h1>
+              <h2 class="authors">
+                {{ item.authors.join(' · ') }}
+              </h2>
             </div>
           </div>
         </NuxtLink>
@@ -37,50 +45,50 @@ import dayToString from '~/plugins/day-to-string.ts'
 import dayToKr from '~/plugins/day-to-kr.ts'
 
 export default {
-  middleware({ redirect, route }) {
+  middleware ({ redirect, route }) {
     // If there is no param for day
     // redirect to today
     if (!route.params.day) {
       return redirect(`/${dayToString(dayjs().day())}`)
     }
   },
-  asyncData({ route }) {
+  computed: {
+    todayStr () {
+      const todayObj = dayjs()
+      return `${todayObj.year()}년 ${todayObj.month() +
+        1}월 ${todayObj.date()}일`
+    }
+  },
+  asyncData ({ route }) {
     return axios
       .get('http://localhost:3000/api/daily-list', {
         params: {
           day: route.params.day
         }
       })
-      .then(response => {
+      .then((response) => {
         return {
           dailyList: response.data,
           today: route.params.day
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err)
       })
   },
   methods: {
-    dayToString(dayIndex, lang) {
+    dayToString (dayIndex, lang) {
       return dayToString(dayIndex, lang)
     },
-    dayToKr(dayStr) {
+    dayToKr (dayStr) {
       return dayToKr(dayStr)
-    }
-  },
-  computed: {
-    todayStr() {
-      let todayObj = dayjs()
-      return `${todayObj.year()}년 ${todayObj.month() +
-        1}월 ${todayObj.date()}일`
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/main';
+@import '~/assets/scss/main';
 
 $cartoon-gap: 1rem;
 
