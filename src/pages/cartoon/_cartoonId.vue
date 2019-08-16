@@ -39,7 +39,7 @@
 
     <!-- 에러: 성인 웹툰 -->
     <div v-else class="error">
-      <h1>성인 웹툰은 현재 지원되지 않습니다.</h1>
+      <h1>문제가 발생했습니다.<br>(성인 웹툰은 현재 지원하지 않습니다.)</h1>
     </div>
   </div>
 </template>
@@ -55,9 +55,11 @@ export default {
       return redirect('/')
     }
   },
-  asyncData ({ route }) {
+  asyncData ({ route, req }) {
+    const apiHost = req ? req.headers.host.split(':')[0] : location.hostname
+
     return axios
-      .get('http://localhost:3000/api/episodes', {
+      .get(`http://${apiHost}:4100/api/episodes`, {
         params: {
           cartoonId: route.params.cartoonId
         }
@@ -69,6 +71,11 @@ export default {
       })
       .catch((err) => {
         console.log(err)
+        return {
+          episodes: {
+            error: true
+          }
+        }
       })
   }
 }
@@ -79,6 +86,7 @@ export default {
 
 .cartoon-specific {
   .cartoon-info {
+    padding: 0 space(3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,7 +96,7 @@ export default {
     .cartoon-thumbs-container {
       position: relative;
       display: inline-block;
-      width: 50vh;
+      width: 25rem;
       max-width: 90%;
 
       &.wall {
@@ -123,6 +131,7 @@ export default {
 
     .details {
       margin: space(3) 0;
+      padding: 0 space(3);
       text-align: center;
 
       .cartoon-title {
@@ -187,7 +196,7 @@ export default {
 
         .ei-title {
           font-weight: weight(4);
-          font-size: body(3);
+          font-size: body(4);
         }
       }
     }

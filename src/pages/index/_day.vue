@@ -45,7 +45,7 @@ import dayToString from '~/plugins/day-to-string.ts'
 import dayToKr from '~/plugins/day-to-kr.ts'
 
 export default {
-  middleware ({ redirect, route }) {
+  middleware ({ redirect, route, req }) {
     // If there is no param for day
     // redirect to today
     if (!route.params.day) {
@@ -59,9 +59,11 @@ export default {
         1}월 ${todayObj.date()}일`
     }
   },
-  asyncData ({ route }) {
+  asyncData ({ route, req }) {
+    const apiHost = req ? req.headers.host.split(':')[0] : location.hostname
+
     return axios
-      .get('http://localhost:3000/api/daily-list', {
+      .get(`http://${apiHost}:4100/api/daily-list`, {
         params: {
           day: route.params.day
         }
@@ -133,7 +135,7 @@ $cartoon-gap: 1rem;
     padding: 0 space(3);
     height: 2.3rem;
     border-radius: radius(4);
-    box-shadow: 0 1.5rem 5rem rgba(#000, 0.4);
+    box-shadow: 0 1.5rem 5rem rgba(#000, 0.5);
 
     .day-link {
       display: flex;
@@ -224,11 +226,12 @@ $cartoon-gap: 1rem;
 
       .cartoon-link {
         .cartoon-item {
-          background-color: $alice-blue;
-          border-radius: $radius-4;
+          background-color: #fff;
+          border-radius: radius(4);
           padding: 0.5rem;
           padding-bottom: 0.7rem;
           overflow: hidden;
+          box-shadow: 0 1rem 1.5rem rgba(#000, 0.1);
 
           .thumb-wrapper {
             width: 100%;
@@ -241,9 +244,9 @@ $cartoon-gap: 1rem;
             .thumb {
               width: 100%;
               height: 100%;
-              border-radius: 0.6rem;
+              border-radius: radius(3);
               overflow: hidden;
-              box-shadow: 0 0.2rem 0.5rem rgba(#000, 0.2);
+              // box-shadow: 0 0.2rem 0.5rem rgba(#000, 0.2);
             }
           }
 
