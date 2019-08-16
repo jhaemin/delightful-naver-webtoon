@@ -17,19 +17,22 @@ router.get('/api/daily-list', (req, response) => {
 })
 
 // Fetch episodes
-router.get('/api/episodes', (req, response) => {
+router.get('/api/episodes', async (req, response) => {
   const fetchEpisodes = require('./modules/fetch-episodes.js')
 
-  fetchEpisodes(req.query.cartoonId)
-    .then((episodes) => {
-      response.json(episodes)
-    })
-    .catch((error) => {
-      console.error(error)
-      response.json({
-        error: true
-      })
-    })
+  const episodes = await fetchEpisodes(req.query.cartoonId)
+  response.json(episodes)
+
+  // fetchEpisodes(req.query.cartoonId)
+  //   .then((episodes) => {
+  //     response.json(episodes)
+  //   })
+  //   .catch((error) => {
+  //     console.error(error)
+  //     response.json({
+  //       error: true
+  //     })
+  //   })
 })
 
 module.exports = router

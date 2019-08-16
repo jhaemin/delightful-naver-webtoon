@@ -6,7 +6,8 @@
           <img v-for="(thumb) in episodes.info.thumbs" :key="thumb" :src="thumb" alt="" class="thumb">
         </div>
         <div class="cartoon-thumbs-container wall">
-          <img v-for="(thumb) in episodes.info.thumbs" :key="thumb" :src="thumb" alt="" class="thumb">
+          <img :src="episodes.info.background" alt="" class="thumb">
+          <!-- <img v-for="(thumb) in episodes.info.thumbs" :key="thumb" :src="thumb" alt="" class="thumb"> -->
         </div>
         <div class="details">
           <h1 class="cartoon-title">
@@ -91,23 +92,31 @@ export default {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    background-color: rgba(#fff, 0.5);
+    background-color: rgba(#fff, 0.4);
 
     .cartoon-thumbs-container {
       position: relative;
       display: inline-block;
-      width: 25rem;
+      width: 20rem;
       max-width: 90%;
 
       &.wall {
         position: fixed;
-        width: 100vh;
+        width: 100%;
+        height: calc(100vh + 5rem);
         max-width: none;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
-        filter: blur(30vh) saturate(1.5);
+        filter: saturate(1.7);
+        opacity: 0.8;
         z-index: -1;
+
+        .thumb {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important;
+        }
       }
 
       .thumb {
@@ -158,7 +167,7 @@ export default {
     .episode-item {
       margin-bottom: space(2);
       position: relative;
-      background-color: rgba(#fff, 0.4);
+      background-color: rgba(#fff, 0.5);
       border-radius: radius(3);
       padding: space(2);
       box-shadow: 0 0.2rem 1rem rgba(#000, 0.1);
