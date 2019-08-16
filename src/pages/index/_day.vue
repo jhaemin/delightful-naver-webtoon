@@ -18,7 +18,7 @@
     </div>
     <div class="cartoon-item-container">
       <div v-for="item in dailyList" :key="item.id" class="cartoon-item-wrapper">
-        <NuxtLink :to="'/cartoon/' + String(item.id)" class="cartoon-link">
+        <a :href="'/cartoon/' + String(item.id)" class="cartoon-link">
           <div class="cartoon-item">
             <div class="thumb-wrapper">
               <img class="thumb" :src="item.thumbSrc" :alt="item.title">
@@ -32,7 +32,7 @@
               </h2>
             </div>
           </div>
-        </NuxtLink>
+        </a>
       </div>
     </div>
   </div>
@@ -226,12 +226,12 @@ $cartoon-gap: 1rem;
 
       .cartoon-link {
         .cartoon-item {
-          background-color: #fff;
-          border-radius: radius(4);
+          background-color: $alice-blue;
+          border-radius: radius(3);
           padding: 0.5rem;
           padding-bottom: 0.7rem;
           overflow: hidden;
-          box-shadow: 0 1rem 1.5rem rgba(#000, 0.1);
+          // box-shadow: 0 1rem 1.5rem rgba(#000, 0.1);
 
           .thumb-wrapper {
             width: 100%;
@@ -244,7 +244,7 @@ $cartoon-gap: 1rem;
             .thumb {
               width: 100%;
               height: 100%;
-              border-radius: radius(3);
+              border-radius: radius(2);
               overflow: hidden;
               // box-shadow: 0 0.2rem 0.5rem rgba(#000, 0.2);
             }
