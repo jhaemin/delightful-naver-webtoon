@@ -11,4 +11,4 @@ An unofficial web application for Naver Webtoon service.
 
 This software fetches data from Naver website and mirrors them. Technically it uses CORS(Cross Origin Resource Sharing). So everytime you use the application, it loads data directly from the source.
 
-> **_NOTE:_** This software does not store or collect any data from the origin.
+> **_NOTE:_** It does not store or collect any kind of data from the origin.
