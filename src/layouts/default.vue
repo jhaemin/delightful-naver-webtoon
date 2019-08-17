@@ -18,11 +18,11 @@ html {
   box-sizing: border-box;
 
   @media only screen and (min-width: 500px) {
-    font-size: 130%;
+    font-size: 110%;
   }
 
   @media only screen and (min-width: 1400px) {
-    font-size: 150%;
+    font-size: 120%;
   }
 }
 
