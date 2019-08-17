@@ -83,11 +83,11 @@ module.exports = async function (cartoonId, pageNumber) {
     })
   }
 
-  await rp(episodes.info.thumbs[0], {
-    headers: {
-      referer: 'https://www.naver.com'
-    }
-  }).pipe(fs.createWriteStream('test1.png'))
+  // await rp(episodes.info.thumbs[0], {
+  //   headers: {
+  //     referer: 'https://www.naver.com'
+  //   }
+  // }).pipe(fs.createWriteStream('test1.png'))
 
   let thumb1 = null
 

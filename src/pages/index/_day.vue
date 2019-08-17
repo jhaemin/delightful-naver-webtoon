@@ -76,6 +76,10 @@ export default {
       })
       .catch((err) => {
         console.log(err)
+        return {
+          dailyList: [],
+          today: route.params.day
+        }
       })
   },
   methods: {
